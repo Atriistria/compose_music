@@ -55,13 +55,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 import com.example.composeapp.R
+import com.example.composeapp.Screen
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyFavor() {
+fun MyFavor(
+    navigationViewModel: NavigationViewModel
+) {
+
     val pagerState = rememberPagerState(initialPage = 0) {
         3
     }
@@ -117,10 +122,10 @@ fun MyFavor() {
                     contentAlignment = Alignment.Center
                 ) {
                     when (page) {
-                        0 -> SongPage()
+                        0 -> SongPage(navigationViewModel)
                         1 -> AlbumPage { }
                         2 -> PlayListPage()
-                        else -> SongPage()
+                        else -> SongPage(navigationViewModel)
                     }
                 }
 
@@ -136,7 +141,9 @@ data class FavorSongItem(
     val artist: String
 )
 @Composable
-fun SongPage() {
+fun SongPage(
+    viewModel: NavigationViewModel
+) {
     val itemList = listOf(FavorSongItem(1,1,"攀升","攀升"))
     Column(
         modifier = Modifier.fillMaxSize()
@@ -146,7 +153,7 @@ fun SongPage() {
                 .fillMaxWidth()
                 .padding(start = 16.dp)
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {}) {
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "play all")
             }
             Text(text = "全部播放", modifier = Modifier
@@ -165,7 +172,7 @@ fun SongPage() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { }
+                        .clickable { viewModel.navigateTo(Screen.MusicPlayer.route) }
                         .padding(start = 15.dp)
                 ) {
                     Text(text = it.ordinal.toString(), modifier = Modifier
@@ -260,7 +267,9 @@ fun ButtonPlay(
             .clickable { },
         contentAlignment = Alignment.Center
     ){
-        Canvas(modifier = Modifier.matchParentSize().padding(16.dp)) {
+        Canvas(modifier = Modifier
+            .matchParentSize()
+            .padding(16.dp)) {
             if (isPlaying) {
                 val barWidth = size.width / 3.5f
                 val barHeight = size.height

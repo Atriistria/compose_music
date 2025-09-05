@@ -1,6 +1,7 @@
 package com.example.composeapp
 
-import android.util.Log
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,13 +10,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.composeapp.ui.screen.LoginScreen
 import com.example.composeapp.ui.screen.MainScreen
+import com.example.composeapp.ui.screen.MusicPlayerScreen
 import com.example.composeapp.ui.screen.MyFavor
-import com.example.composeapp.ui.screen.ProfileScreen
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(
+    navigationViewModel: NavigationViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
-    val navigationViewModel: NavigationViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         navigationViewModel.navigationEvent.collect { event ->
@@ -30,13 +33,20 @@ fun AppNavHost() {
     NavHost(navController, Screen.Login.route) {
         composable(Screen.Login.route) {
             LoginScreen {
-                navigationViewModel.navigateTo(Screen.Home.route)
+                navigationViewModel.navigateTo(Screen.Main.route)
             }
         }
 
-        composable(Screen.Home.route) { MainScreen(navigationViewModel) }
+        composable(Screen.Main.route) { MainScreen(navigationViewModel) }
 
-        composable(Screen.MyFavor.route) { MyFavor() }
+        composable(
+            Screen.MyFavor.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+        ) { MyFavor(navigationViewModel) }
+
+        composable(Screen.MusicPlayer.route) { MusicPlayerScreen() }
 
     }
 }

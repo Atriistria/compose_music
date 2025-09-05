@@ -76,6 +76,7 @@ dependencies {
     // coil图片加载库
     implementation(libs.coil.compose)
 
+    // 播放器
     implementation (libs.androidx.media3.exoplayer)
     implementation (libs.androidx.media3.ui)
 

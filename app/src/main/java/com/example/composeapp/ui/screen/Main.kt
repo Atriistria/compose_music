@@ -1,6 +1,5 @@
 package com.example.composeapp.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,15 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
-import com.example.composeapp.NavigationViewModel
-import com.example.composeapp.Screen
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 
 
 sealed class BottomNavScreen(val route: String, val label: String, val icon: ImageVector) {
@@ -91,10 +88,8 @@ fun MainScreen(
                         HomeScreen()
                     }
 
-                    composable(BottomNavScreen.Profile.route) {
-                        ProfileScreen {
-                            navigationViewModel.navigateTo(Screen.MyFavor.route)
-                        }
+                    composable(BottomNavScreen.Profile.route) { backStackEntry ->
+                        ProfileScreen(navigationViewModel)
                     }
 
                     composable(BottomNavScreen.Settings.route) {

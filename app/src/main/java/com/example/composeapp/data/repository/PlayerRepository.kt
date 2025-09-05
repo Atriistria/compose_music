@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface PlayerRepository{
+interface PlayerRepository {
     val playerStateFlow: StateFlow<MusicPlayerUiState>
 
-    suspend fun play(song: Song)
+     fun play(song: Song)
 
-    suspend fun pause()
+     fun pause()
 
-    suspend fun seekTo(position: Long)
+     fun seekTo(position: Long)
 
-    suspend fun setVolume(volume: Float)
+     fun setVolume(volume: Float)
 
-    suspend fun toggleMode()
+     fun toggleMode()
 }
 
 @Singleton
@@ -37,26 +37,42 @@ class PlayerRepositoryImpl @Inject constructor(
     override val playerStateFlow: StateFlow<MusicPlayerUiState>
         get() = _playerStateFlow
 
-    override suspend fun play(song: Song) {
+    override  fun play(song: Song) {
         exoPlayer.setMediaItem(MediaItem.fromUri(song.uri))
         exoPlayer.prepare()
         exoPlayer.play()
-        _playerStateFlow.update { it.copy(isPlaying = true) }
+        _playerStateFlow.update { it.copy(playbackState = it.playbackState.copy(isPlaying = true)) }
     }
 
-    override suspend fun pause() {
-        // Implement pause logic
+    override fun pause() {
+        exoPlayer.pause()
+        _playerStateFlow.update { it.copy(playbackState = it.playbackState.copy(isPlaying = false)) }
     }
 
-    override suspend fun seekTo(position: Long) {
-        // Implement seek logic
+    override  fun seekTo(position: Long) {
+        exoPlayer.seekTo(position)
+        _playerStateFlow.update { currentState ->
+            val duration = currentState.playbackState.totalDuration.takeIf { it > 0 } ?: 1L
+            currentState.copy(
+                playbackState = currentState.playbackState.copy(
+                    currentPosition = position,
+                    progress = position.toFloat() / duration
+                )
+            )
+        }
     }
 
-    override suspend fun setVolume(volume: Float) {
-        // Implement volume change logic
+    override  fun setVolume(volume: Float) {
+        exoPlayer.volume = volume
+        _playerStateFlow.update { it.copy(controlState = it.controlState.copy(volume = volume)) }
     }
 
-    override suspend fun toggleMode() {
-        // Implement mode toggle logic
+    override  fun toggleMode() {
+        _playerStateFlow.update { currentState ->
+            val newMode = currentState.controlState.mode.next()
+            currentState.copy(
+                controlState = currentState.controlState.copy(mode = newMode)
+            )
+        }
     }
 }

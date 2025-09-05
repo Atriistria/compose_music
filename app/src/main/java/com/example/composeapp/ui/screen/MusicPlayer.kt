@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,35 +48,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composeapp.model.Song
+import com.example.composeapp.ui.viewmodel.MusicPlayerIntent
+import com.example.composeapp.ui.viewmodel.MusicPlayerMode
+import com.example.composeapp.ui.viewmodel.MusicPlayerUiState
+import com.example.composeapp.ui.viewmodel.MusicPlayerViewModel
 
-
-sealed class MusicPlayerEvent {
-    data class PlayPause(val isPlaying: Boolean) : MusicPlayerEvent()
-    data class Next(val song: Song) : MusicPlayerEvent()
-    data class Previous(val song: Song) : MusicPlayerEvent()
-    data class Like(val song: Song) : MusicPlayerEvent()
-    data class VolumeChange(val volume: Float) : MusicPlayerEvent()
-    data class SeekTo(val position: Long) : MusicPlayerEvent()
+@Composable
+fun MusicPlayerScreen(
+    viewModel: MusicPlayerViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+    MusicPlayer(state,viewModel::dispatch)
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MusicPlayerScreen(
-    curSong: Song?,
-    onPlayPauseClick: () -> Unit,
-    onNextClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    onLikeClick: () -> Unit,
-    onVolumeChange: (Float) -> Unit,
-    onSeekTo: (Long) -> Unit,
-    curPosition: Float,
-    totalDuration: Float,
-    curVolume: Float,
-    isPlaying: Boolean
+fun MusicPlayer(
+    state: MusicPlayerUiState,
+    onIntent: (MusicPlayerIntent) -> Unit
 ) {
-
     val gradientPurple = Color(0xFF7A40F2) // 底部紫色背景
     val gradientBlue = Color(0xFF3F80FF)   // 顶部蓝色背景
 
@@ -159,16 +152,16 @@ fun MusicPlayerScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
 
-            curSong?.let {
+            state.playlistState.let {
                 Text(
-                    text = it.title,
+                    text = it.currentSong?.title ?: "未知",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = it.artist,
+                    text = it.currentSong?.artist ?: "未知",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.LightGray,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -184,21 +177,21 @@ fun MusicPlayerScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = formatDuration(curPosition.toLong()),
+                        text = formatDuration(state.hasDuration),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.7f)
                     )
                     Text(
-                        text = formatDuration(totalDuration.toLong()),
+                        text = formatDuration(state.currentSong?.duration ?: 0L),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Slider(
-                    value = curPosition,
-                    onValueChange = { newValue -> onSeekTo(newValue.toLong()) },
-                    valueRange = 0f..totalDuration,
+                    value = state.hasDuration.toFloat(),
+                    onValueChange = { newValue -> onIntent(MusicPlayerIntent.SeekTo(newValue.toLong())) },
+                    valueRange = 0f..(state.currentSong?.duration?.toFloat() ?: 1f),
                     modifier = Modifier.fillMaxWidth(),
                     colors = SliderDefaults.colors(
                         activeTrackColor = progressStartColor,
@@ -224,7 +217,7 @@ fun MusicPlayerScreen(
                     )
                 }
 
-                IconButton(onClick = onPreviousClick) {
+                IconButton(onClick = { onIntent(MusicPlayerIntent.Previous) }) {
                     Icon(
                         Icons.Default.Refresh,
                         contentDescription = "Previous",
@@ -238,11 +231,11 @@ fun MusicPlayerScreen(
                         .size(60.dp)
                         .clip(CircleShape)
                         .background(playButtonColor)
-                        .clickable { onPlayPauseClick() }
+                        .clickable { onIntent(MusicPlayerIntent.PlayPause) }
                 ) {
                     Icon(
-                        imageVector = if (isPlaying) Icons.Default.PlayArrow else Icons.Default.PlayArrow,
-                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        imageVector = if (state.isPlaying) Icons.Default.PlayArrow else Icons.Default.PlayArrow,
+                        contentDescription = if (state.isPlaying) "Pause" else "Play",
                         tint = Color.White,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -250,7 +243,7 @@ fun MusicPlayerScreen(
                     )
                 }
 
-                IconButton(onClick = onNextClick) {
+                IconButton(onClick = { onIntent(MusicPlayerIntent.Next) }) {
                     Icon(
                         Icons.Default.Refresh,
                         contentDescription = "Next",
@@ -260,7 +253,7 @@ fun MusicPlayerScreen(
 
                 }
 
-                IconButton(onClick = onLikeClick) {
+                IconButton(onClick = { onIntent(MusicPlayerIntent.Like) }) {
                     Icon(
                         Icons.Default.Favorite,
                         contentDescription = "Like",
@@ -285,8 +278,8 @@ fun MusicPlayerScreen(
                 )
 
                 Slider(
-                    value = curVolume,
-                    onValueChange = { newValue -> onVolumeChange(newValue) },
+                    value = state.controlState.volume,
+                    onValueChange = { newValue -> onIntent(MusicPlayerIntent.VolumeChange(newValue)) },
                     valueRange = 0f..1f,
                     modifier = Modifier
                         .weight(1f)
@@ -312,27 +305,48 @@ fun formatDuration(durationMillis: Long): String {
     return String.format("%02d:%02d", minutes, seconds)
 }
 
-@Preview
+@Preview(showBackground = true, apiLevel = 34)
 @Composable
-fun MusicPlayerScreenPreview() {
-    MusicPlayerScreen(
-        curSong = Song(
-            id = 1,
-            title = "Song Title",
-            artist = "Artist Name",
-            album = "Album Name",
-            duration = 240,
-            uri = Uri.parse("https://example.com/song.mp3")
+fun MusicPlayerPreview() {
+    val previewState = MusicPlayerUiState(
+        playlistState = MusicPlayerUiState.PlaylistState(
+            songs = listOf(
+                Song(
+                    id = 1,
+                    title = "夜曲",
+                    artist = "周杰伦",
+                    album = "十一月的萧邦",
+                    duration = 280000L,
+                    uri = Uri.parse("dummy_uri")
+                ),
+                Song(
+                    id = 2,
+                    title = "青花瓷",
+                    artist = "周杰伦",
+                    album = "我很忙",
+                    duration = 220000L,
+                    uri = Uri.parse("dummy_uri")
+                )
+            ),
+            currentIndex = 0,
+            isLiked = false
         ),
-        onPlayPauseClick = {},
-        onNextClick = {},
-        onPreviousClick = {},
-        onLikeClick = {},
-        onVolumeChange = {},
-        onSeekTo = {},
-        curPosition = 0f,
-        totalDuration = 240f,
-        curVolume = 0.5f,
-        isPlaying = true
+        playbackState = MusicPlayerUiState.PlaybackState(
+            isPlaying = true,
+            progress = 0.3f,
+            currentPosition = 84000L,
+            totalDuration = 280000L,
+            bufferedPercentage = 0.7f
+        ),
+        controlState = MusicPlayerUiState.ControlState(
+            volume = 0.8f,
+            mode = MusicPlayerMode.Normal,
+            isShuffled = false
+        )
+    )
+
+    MusicPlayer(
+        state = previewState,
+        onIntent = {}
     )
 }

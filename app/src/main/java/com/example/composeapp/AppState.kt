@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.SharedFlow
 
 sealed class Screen(val route: String) {
     data object Login : Screen("login")
-    data object Home : Screen("home")
+    data object Main : Screen("main")
     data object Profile : Screen("profile")
     data object Setting : Screen("setting")
     data object MusicPlayer : Screen("player")

@@ -12,7 +12,6 @@ class MApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         MToast.init(this)
-        FrameRateMonitor.start()
     }
 
 }

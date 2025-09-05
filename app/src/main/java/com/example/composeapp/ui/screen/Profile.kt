@@ -13,14 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 import com.example.composeapp.R
+import com.example.composeapp.Screen
 
 @Composable
 fun ProfileScreen(
-    onNavigate: () -> Unit
+    navigationViewModel: NavigationViewModel,
 ) {
     Row(
         modifier = Modifier
@@ -48,7 +49,7 @@ fun ProfileScreen(
                 text = "点击编辑",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.clickable {
-                    onNavigate()
+                    navigationViewModel.navigateTo(Screen.MyFavor.route)
                 }
             )
         }
