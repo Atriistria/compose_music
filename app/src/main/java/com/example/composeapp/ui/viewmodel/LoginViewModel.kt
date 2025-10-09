@@ -2,7 +2,7 @@ package com.example.composeapp.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.example.composeapp.data.repository.LoginRepository
+import com.example.composeapp.core.data.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -1,7 +1,12 @@
 package com.example.composeapp
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,7 +30,7 @@ fun AppNavHost(
             when(event) {
                 is NavigationEvent.Navigate -> navController.navigate(event.route)
                 is NavigationEvent.NavigateUp -> navController.navigateUp()
-                is NavigationEvent.NavigateBack -> navController.navigateUp()
+                is NavigationEvent.NavigateBack -> navController.popBackStack()
             }
         }
     }
@@ -37,16 +42,25 @@ fun AppNavHost(
             }
         }
 
-        composable(Screen.Main.route) { MainScreen(navigationViewModel) }
+        composable(
+            Screen.Main.route,
+        ) { MainScreen(navigationViewModel) }
 
         composable(
             Screen.MyFavor.route,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }, // 比如离开时淡出
+            popEnterTransition = { fadeIn(animationSpec = tween(300)) }, // 返回时淡入
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
         ) { MyFavor(navigationViewModel) }
 
-        composable(Screen.MusicPlayer.route) { MusicPlayerScreen() }
+        composable(
+            Screen.MusicPlayer.route,
+            enterTransition = { slideInVertically(initialOffsetY = { it }) },
+            exitTransition = { slideOutVertically(targetOffsetY = { it }) },
+            popEnterTransition = { slideInVertically(initialOffsetY = { it }) },
+            popExitTransition = { slideOutVertically(targetOffsetY = { it }) }
+        ) { MusicPlayerScreen(navigationViewModel) }
 
     }
 }

@@ -1,6 +1,6 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.core.data.repository
 
-import com.example.composeapp.model.Song
+import com.example.composeapp.core.model.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

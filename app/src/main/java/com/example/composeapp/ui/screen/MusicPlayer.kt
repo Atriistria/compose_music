@@ -20,10 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
@@ -49,36 +48,39 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.composeapp.model.Song
+import com.example.composeapp.core.model.Song
 import com.example.composeapp.ui.viewmodel.MusicPlayerIntent
 import com.example.composeapp.ui.viewmodel.MusicPlayerMode
 import com.example.composeapp.ui.viewmodel.MusicPlayerUiState
 import com.example.composeapp.ui.viewmodel.MusicPlayerViewModel
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 
 @Composable
 fun MusicPlayerScreen(
+    navigationViewModel: NavigationViewModel,
     viewModel: MusicPlayerViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-    MusicPlayer(state,viewModel::dispatch)
+    MusicPlayer(state, navigationViewModel, viewModel::dispatch)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicPlayer(
     state: MusicPlayerUiState,
+    navigationViewModel: NavigationViewModel,
     onIntent: (MusicPlayerIntent) -> Unit
 ) {
-    val gradientPurple = Color(0xFF7A40F2) // 底部紫色背景
-    val gradientBlue = Color(0xFF3F80FF)   // 顶部蓝色背景
+    val gradientPurple = Color(0xFF76944E) // 底部
+    val gradientBlue = Color(0xFF8F9E6E)   // 顶部
 
     //专辑封面区域的颜色
-    val albumGradientStart = Color(0xFFFF9A8B)
-    val albumGradientEnd = Color(0xFFFFD1AD)
+    val albumGradientStart = Color(0xFFB8BB8D)
+    val albumGradientEnd = Color(0xFF36582D)
 
     // 进度条颜色
-    val progressStartColor = Color(0xFFF0985C)
-    val progressEndColor = Color(0xFFEEAD4E)
+    val progressStartColor = Color(0xFFF8DECC)
+    val progressEndColor = Color(0xFFE7D9C5)
 
     // 播放/暂停按钮的背景色
     val playButtonColor = Color(0xFF3D80FF)
@@ -89,7 +91,8 @@ fun MusicPlayer(
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                delayMillis = 10000,
+                durationMillis = 15000,
+                delayMillis = 0,
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
@@ -108,9 +111,14 @@ fun MusicPlayer(
             .padding(16.dp)
     ) {
         TopAppBar(
+            navigationIcon = {
+                IconButton(onClick = { navigationViewModel.navigateBack() }) {
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Back", tint = Color.White)
+                }
+            },
             title = { Text(text = "播放器", color = Color.White) },
             actions = {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "Menu", tint = Color.White)
                 }
             },
@@ -128,13 +136,14 @@ fun MusicPlayer(
                 .padding(top = 100.dp)
                 .align(Alignment.Center)
         ) {
+            // 专辑封面
             Box(
                 modifier = Modifier
                     .size(280.dp)
                     .graphicsLayer {
                         rotationZ = rotationAngle
                     }
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(CircleShape)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(albumGradientStart, albumGradientEnd)
@@ -145,13 +154,14 @@ fun MusicPlayer(
                 Box(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(60.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
                         .background(Color.Black)
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
 
+            // 歌曲信息
             state.playlistState.let {
                 Text(
                     text = it.currentSong?.title ?: "未知",
@@ -167,7 +177,7 @@ fun MusicPlayer(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             // 进度条
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -203,12 +213,13 @@ fun MusicPlayer(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // 控制按钮
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {  }) {
                     Icon(
                         Icons.Default.List,
                         contentDescription = "Queue",
@@ -263,39 +274,11 @@ fun MusicPlayer(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Create,
-                    contentDescription = "Volume",
-                    tint = Color.White.copy(alpha = 0.7f),
-                    modifier = Modifier.size(24.dp)
-                )
-
-                Slider(
-                    value = state.controlState.volume,
-                    onValueChange = { newValue -> onIntent(MusicPlayerIntent.VolumeChange(newValue)) },
-                    valueRange = 0f..1f,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 16.dp),
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = Color.White,
-                        inactiveTrackColor = Color.White.copy(alpha = 0.3f),
-                        thumbColor = Color.Transparent
-                    )
-                )
-            }
-
         }
     }
 
 }
+
 
 fun formatDuration(durationMillis: Long): String {
     if (durationMillis < 0) return "--:--"
@@ -347,6 +330,7 @@ fun MusicPlayerPreview() {
 
     MusicPlayer(
         state = previewState,
+        navigationViewModel = NavigationViewModel(),
         onIntent = {}
     )
 }

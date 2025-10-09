@@ -1,9 +1,9 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.core.data.repository
 
 import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import com.example.composeapp.model.Song
+import com.example.composeapp.core.model.Song
 import com.example.composeapp.ui.viewmodel.MusicPlayerUiState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.core.data.repository
 
 import com.example.composeapp.network.retrofit.UserApi
 import javax.inject.Inject

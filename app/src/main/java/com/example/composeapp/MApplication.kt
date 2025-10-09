@@ -1,7 +1,6 @@
 package com.example.composeapp
 
 import android.app.Application
-import com.example.composeapp.profiler.FrameRateMonitor
 import com.example.composeapp.util.MToast
 import dagger.hilt.android.HiltAndroidApp
 

@@ -1,4 +1,4 @@
-package com.example.composeapp.model
+package com.example.composeapp.core.model
 
 import android.net.Uri
 

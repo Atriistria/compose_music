@@ -1,4 +1,4 @@
-package com.example.composeapp.profiler
+package com.example.composeapp.core.common.profiler
 
 import android.util.Log
 import android.view.Choreographer

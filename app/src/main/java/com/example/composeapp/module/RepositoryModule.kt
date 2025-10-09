@@ -1,9 +1,9 @@
 package com.example.composeapp.module
 
-import com.example.composeapp.data.repository.LoginRepository
-import com.example.composeapp.data.repository.LoginRepositoryImpl
-import com.example.composeapp.data.repository.PlayerRepository
-import com.example.composeapp.data.repository.PlayerRepositoryImpl
+import com.example.composeapp.core.data.repository.LoginRepository
+import com.example.composeapp.core.data.repository.LoginRepositoryImpl
+import com.example.composeapp.core.data.repository.PlayerRepository
+import com.example.composeapp.core.data.repository.PlayerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,11 +1,10 @@
 package com.example.composeapp.ui.viewmodel
 
-import com.example.composeapp.data.repository.PlayerRepository
-import com.example.composeapp.model.Song
+import com.example.composeapp.core.data.repository.PlayerRepository
+import com.example.composeapp.core.model.Song
 import com.example.composeapp.util.MLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-
 
 @HiltViewModel
 class MusicPlayerViewModel @Inject constructor(
@@ -80,7 +79,7 @@ class MusicPlayerViewModel @Inject constructor(
         }
     }
 
-    // ：更新播放列表状态
+    // 更新播放列表状态
     private fun updatePlaylistState(transform: (MusicPlayerUiState.PlaylistState) -> MusicPlayerUiState.PlaylistState) {
         setState { currentState ->
             currentState.copy(playlistState = transform(currentState.playlistState))
@@ -101,13 +100,13 @@ class MusicPlayerViewModel @Inject constructor(
         }
     }
 
-    // 新增：加载播放列表
+    // 加载播放列表
     fun loadPlaylist(songs: List<Song>, startIndex: Int = 0) {
         updatePlaylistState { it.copy(songs = songs, currentIndex = startIndex) }
         updatePlaybackState { it.copy(totalDuration = songs.getOrNull(startIndex)?.duration ?: 0L) }
     }
 
-    // 新增：更新播放进度（由播放器定期调用）
+    // 更新播放进度
     fun updateProgress(currentPosition: Long, totalDuration: Long) {
         updatePlaybackState {
             it.copy(
