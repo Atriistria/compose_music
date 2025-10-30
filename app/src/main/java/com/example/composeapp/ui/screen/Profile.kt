@@ -22,9 +22,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.composeapp.ui.viewmodel.NavigationViewModel
 import com.example.composeapp.R
-import com.example.composeapp.Screen
+import com.example.composeapp.ui.Screen
+import com.example.composeapp.ui.viewmodel.NavigationViewModel
 
 @Composable
 fun ProfileScreen(
@@ -35,12 +35,12 @@ fun ProfileScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
+        Avatar(navigationViewModel)
     }
 }
 
 @Composable
-fun Avatar() {
+fun Avatar(navigationViewModel: NavigationViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,7 +68,12 @@ fun Avatar() {
             Text(
                 text = " 张三",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable {
+                        navigationViewModel.navigateTo(Screen.MyFavor.route)
+                    },
+
             )
         }
     }
@@ -77,5 +82,5 @@ fun Avatar() {
 @Preview(apiLevel = 34)
 @Composable
 fun ProfileScreenPreview() {
-    Avatar()
+
 }

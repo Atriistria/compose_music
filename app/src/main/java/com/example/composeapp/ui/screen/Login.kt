@@ -29,7 +29,6 @@ import com.example.composeapp.ui.viewmodel.LoginUiState
 import com.example.composeapp.ui.viewmodel.LoginViewModel
 import com.example.composeapp.util.MToast
 
-
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
@@ -46,7 +45,6 @@ fun LoginScreen(
         }
     }
     Login(state = state, onIntent = viewModel::dispatch)
-
 }
 
 @Composable

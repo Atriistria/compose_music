@@ -1,7 +1,9 @@
 package com.example.composeapp.ui.viewmodel
 
 import android.util.Log
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.viewModelScope
+import com.example.composeapp.core.data.repository.AppPreferencesRepository
 import com.example.composeapp.core.data.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,7 +29,8 @@ sealed interface LoginEffect: UiEffect {
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: LoginRepository
+    private val repository: LoginRepository,
+    private val appPreferences: AppPreferencesRepository
 ): BaseViewModel<LoginUiState, LoginIntent, LoginEffect>(LoginUiState()) {
 
     override fun onIntent(intent: LoginIntent) {
@@ -56,6 +59,7 @@ class LoginViewModel @Inject constructor(
                 emitEffect(LoginEffect.ShowToast("用户名或密码错误"))
                 emitEffect(LoginEffect.NavigateHome)
             }
+            appPreferences.put(booleanPreferencesKey("is_login"), true)
         }
     }
 

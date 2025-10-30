@@ -1,4 +1,4 @@
-package com.example.composeapp.core
+package com.example.composeapp.core.common
 
 fun interface PlayModeStrategy{
     fun next(currentIndex: Int, size: Int): Int

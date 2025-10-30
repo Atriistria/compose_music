@@ -1,4 +1,4 @@
-package com.example.composeapp
+package com.example.composeapp.ui
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -21,13 +21,15 @@ import com.example.composeapp.ui.viewmodel.NavigationViewModel
 
 @Composable
 fun AppNavHost(
-    navigationViewModel: NavigationViewModel = hiltViewModel()
+    navigationViewModel: NavigationViewModel = hiltViewModel(),
+    isLogin: Boolean,
 ) {
     val navController = rememberNavController()
+    val startDestination = if (isLogin) Screen.Main.route else Screen.Login.route
 
     LaunchedEffect(Unit) {
         navigationViewModel.navigationEvent.collect { event ->
-            when(event) {
+            when (event) {
                 is NavigationEvent.Navigate -> navController.navigate(event.route)
                 is NavigationEvent.NavigateUp -> navController.navigateUp()
                 is NavigationEvent.NavigateBack -> navController.popBackStack()
@@ -35,16 +37,16 @@ fun AppNavHost(
         }
     }
 
-    NavHost(navController, Screen.Login.route) {
+    NavHost(navController, startDestination) {
         composable(Screen.Login.route) {
             LoginScreen {
                 navigationViewModel.navigateTo(Screen.Main.route)
             }
         }
 
-        composable(
-            Screen.Main.route,
-        ) { MainScreen(navigationViewModel) }
+        composable(Screen.Main.route) {
+            MainScreen()
+        }
 
         composable(
             Screen.MyFavor.route,
@@ -52,7 +54,9 @@ fun AppNavHost(
             exitTransition = { fadeOut(animationSpec = tween(300)) }, // 比如离开时淡出
             popEnterTransition = { fadeIn(animationSpec = tween(300)) }, // 返回时淡入
             popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
-        ) { MyFavor(navigationViewModel) }
+        ) {
+            MyFavor(navigationViewModel)
+        }
 
         composable(
             Screen.MusicPlayer.route,
@@ -60,7 +64,9 @@ fun AppNavHost(
             exitTransition = { slideOutVertically(targetOffsetY = { it }) },
             popEnterTransition = { slideInVertically(initialOffsetY = { it }) },
             popExitTransition = { slideOutVertically(targetOffsetY = { it }) }
-        ) { MusicPlayerScreen(navigationViewModel) }
+        ) {
+            MusicPlayerScreen(navigationViewModel)
+        }
 
     }
 }

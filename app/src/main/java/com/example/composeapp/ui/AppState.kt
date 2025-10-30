@@ -1,4 +1,4 @@
-package com.example.composeapp
+package com.example.composeapp.ui
 
 import kotlinx.coroutines.flow.SharedFlow
 

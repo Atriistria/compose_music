@@ -13,7 +13,6 @@ sealed interface UiState
 sealed interface UiIntent
 sealed interface UiEffect
 
-
 abstract class BaseViewModel<S: UiState, I: UiIntent, E: UiEffect>(initialState: S): ViewModel() {
 
     private val _uiState = MutableStateFlow(initialState)

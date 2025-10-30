@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.composeapp.ui.viewmodel.NavigationViewModel
 import com.example.composeapp.R
-import com.example.composeapp.Screen
+import com.example.composeapp.ui.Screen
 import kotlinx.coroutines.launch
 
 
@@ -66,7 +66,6 @@ import kotlinx.coroutines.launch
 fun MyFavor(
     navigationViewModel: NavigationViewModel
 ) {
-
     val pagerState = rememberPagerState(initialPage = 0) {
         3
     }
@@ -74,18 +73,21 @@ fun MyFavor(
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         TopAppBar(
-            navigationIcon = {},
+            navigationIcon = {
+                IconButton(onClick = {
+                    navigationViewModel.navigateBack()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            },
             title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {  }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
                     Text(
                         text = "我的收藏",
                         modifier = Modifier.weight(1f),
@@ -140,6 +142,7 @@ data class FavorSongItem(
     val title: String,
     val artist: String
 )
+
 @Composable
 fun SongPage(
     viewModel: NavigationViewModel

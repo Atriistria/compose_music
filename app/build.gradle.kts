@@ -101,4 +101,16 @@ dependencies {
 
     // 桌面组件
     implementation(libs.androidx.glance.appwidget)
+
+    // DateStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // splashscreen
+    implementation(libs.androidx.core.splashscreen)
+
+    // material3-adaptive
+    implementation(libs.androidx.adaptive)
+    implementation(libs.androidx.adaptive.layout)
+    implementation(libs.androidx.adaptive.navigation)
+
 }

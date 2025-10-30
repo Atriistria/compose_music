@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComposeApp"
 include(":app")
- 
+include(":feature")

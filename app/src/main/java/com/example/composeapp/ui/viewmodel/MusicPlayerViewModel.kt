@@ -118,6 +118,7 @@ class MusicPlayerViewModel @Inject constructor(
     }
 }
 
+// 播放模式
 enum class MusicPlayerMode {
     Normal, Random, Repeat;
 
@@ -127,6 +128,7 @@ enum class MusicPlayerMode {
         Repeat -> Normal
     }
 }
+
 // 播放器状态数据类
 data class MusicPlayerUiState(
     val playlistState: PlaylistState = PlaylistState(),
@@ -159,9 +161,9 @@ data class MusicPlayerUiState(
     data class ControlState(
         val volume: Float = 0.8f,
         val mode: MusicPlayerMode = MusicPlayerMode.Normal,
-        val isShuffled: Boolean = false // 新增：随机播放状态
     )
 }
+
 sealed interface MusicPlayerIntent : UiIntent {
     data object PlayPause : MusicPlayerIntent
     data object Next : MusicPlayerIntent

@@ -75,8 +75,8 @@ fun MusicPlayer(
     val gradientBlue = Color(0xFF8F9E6E)   // 顶部
 
     //专辑封面区域的颜色
-    val albumGradientStart = Color(0xFFB8BB8D)
-    val albumGradientEnd = Color(0xFF36582D)
+    val albumGradientStart = Color(0xFFEBF0A8)
+    val albumGradientEnd = Color(0xFF9FDF8F)
 
     // 进度条颜色
     val progressStartColor = Color(0xFFF8DECC)
@@ -279,7 +279,6 @@ fun MusicPlayer(
 
 }
 
-
 fun formatDuration(durationMillis: Long): String {
     if (durationMillis < 0) return "--:--"
     val totalSeconds = (durationMillis / 1000).toInt()
@@ -324,13 +323,12 @@ fun MusicPlayerPreview() {
         controlState = MusicPlayerUiState.ControlState(
             volume = 0.8f,
             mode = MusicPlayerMode.Normal,
-            isShuffled = false
         )
     )
 
-    MusicPlayer(
-        state = previewState,
-        navigationViewModel = NavigationViewModel(),
-        onIntent = {}
-    )
+//    MusicPlayer(
+//        state = previewState,
+//        navigationViewModel = NavigationViewModel(),
+//        onIntent = {}
+//    )
 }
