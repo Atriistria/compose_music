@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.composeapp"
+    namespace = "com.atri.composemusic"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.composeapp"
+        applicationId = "com.atri.composemusic"
         minSdk = 28
         versionCode = 1
         versionName = "1.0"
