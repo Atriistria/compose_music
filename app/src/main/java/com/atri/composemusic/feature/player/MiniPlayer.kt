@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -35,13 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.atri.composemusic.R
 
 @Composable
 fun MiniPlayerOverlay(navigateTo: () -> Unit) {
-    val bottomNavBarHeight = 80.dp
+    val bottomNavBarHeight = 0.dp
     val playerOffset = -bottomNavBarHeight / 1.3f
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -81,52 +81,56 @@ fun MiniPlayerOverlay(navigateTo: () -> Unit) {
                     .clip(RoundedCornerShape(12.dp))
                     .align(Alignment.TopStart) // 将 Image 放置在 Box 的左上角
             )
+            ExpandedContent(modifier = Modifier.align(Alignment.BottomStart),isExpanded = isExpanded)
+        }
+    }
+}
 
-            if (!isExpanded) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(Modifier.width(56.dp)) // 留出 Image 的空间
+@Composable
+fun ExpandedContent(modifier: Modifier,isExpanded: Boolean) {
+    if (!isExpanded) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(56.dp)) // 留出 Image 的空间
 
-                    // 歌曲信息
-                    Text(
-                        text = "测试",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f)
-                    )
+            // 歌曲信息
+            Text(
+                text = "测试",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
 
-                    // 控制按钮
-                    IconButton(onClick = { /* Play/Pause */ }) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
-                    }
-                    IconButton(onClick = { /* Show Playlist */ }) {
-                        Icon(Icons.Default.Lock, contentDescription = "Playlist")
-                    }
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 8.dp)
-                        .offset { IntOffset(0, (imageSize + 12.dp).roundToPx()) }, // 放在 Image 下方
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "测试",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f)
-                    )
+            // 控制按钮
+            IconButton(onClick = { /* Play/Pause */ }) {
+                Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
+            }
+            IconButton(onClick = { /* Show Playlist */ }) {
+                Icon(Icons.Default.Lock, contentDescription = "Playlist")
+            }
+        }
+    } else {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp)
+            ,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "测试",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
 
-                    IconButton(onClick = { /* Play/Pause */ }) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
-                    }
-                    IconButton(onClick = { /* Show Playlist */ }) {
-                        Icon(Icons.Default.Lock, contentDescription = "Playlist")
-                    }
-                }
+            IconButton(onClick = { /* Play/Pause */ }) {
+                Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
+            }
+            IconButton(onClick = { /* Show Playlist */ }) {
+                Icon(Icons.Default.Lock, contentDescription = "Playlist")
             }
         }
     }
