@@ -33,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -63,7 +62,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import com.atri.composemusic.feature.home.HomeScreen
-
 import com.atri.composemusic.feature.player.MiniPlayerOverlay
 import com.atri.composemusic.feature.profile.ProfileScreen
 import com.atri.composemusic.feature.settings.SettingScreen

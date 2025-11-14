@@ -3,8 +3,9 @@ package com.atri.composemusic.feature.player
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,11 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.atri.composemusic.R
 
 @Composable
-fun MiniPlayerOverlay(navigateTo:() ->Unit) {
+fun MiniPlayerOverlay(navigateTo: () -> Unit) {
     val bottomNavBarHeight = 80.dp
     val playerOffset = -bottomNavBarHeight / 1.3f
 
@@ -59,43 +62,78 @@ fun MiniPlayerOverlay(navigateTo:() ->Unit) {
             .offset(y = playerOffset)
             .height(height)
             .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
                 onClick = { navigateTo() },
-                onLongClick = { isExpanded = !isExpanded }
+                onLongClick = { isExpanded = !isExpanded },
             )
-
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        // 使用 Box 来实现 Image 的绝对定位，使其可以自由放置
+        Box(modifier = Modifier.fillMaxSize()) {
             // 专辑封面
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Album Art",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .padding(start = 8.dp, top = 8.dp) // 添加一些内边距，确保 Image 不会完全贴边
                     .size(imageSize)
                     .clip(RoundedCornerShape(12.dp))
+                    .align(Alignment.TopStart) // 将 Image 放置在 Box 的左上角
             )
 
-            Spacer(Modifier.width(12.dp))
+            if (!isExpanded) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(Modifier.width(56.dp)) // 留出 Image 的空间
 
-            // 歌曲信息
-            Text(
-                text = "测试",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.weight(1f)
-            )
+                    // 歌曲信息
+                    Text(
+                        text = "测试",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
+                    )
 
-            // 控制按钮
-            IconButton(onClick = { /* Play/Pause */ }) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
-            }
-            IconButton(onClick = { /* Show Playlist */ }) {
-                Icon(Icons.Default.Lock, contentDescription = "Playlist")
+                    // 控制按钮
+                    IconButton(onClick = { /* Play/Pause */ }) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
+                    }
+                    IconButton(onClick = { /* Show Playlist */ }) {
+                        Icon(Icons.Default.Lock, contentDescription = "Playlist")
+                    }
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 8.dp)
+                        .offset { IntOffset(0, (imageSize + 12.dp).roundToPx()) }, // 放在 Image 下方
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "测试",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    IconButton(onClick = { /* Play/Pause */ }) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
+                    }
+                    IconButton(onClick = { /* Show Playlist */ }) {
+                        Icon(Icons.Default.Lock, contentDescription = "Playlist")
+                    }
+                }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun MiniPlayerPreview() {
+    MiniPlayerOverlay {}
 }

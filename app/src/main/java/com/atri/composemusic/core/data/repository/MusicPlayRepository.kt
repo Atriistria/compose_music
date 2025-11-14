@@ -12,13 +12,16 @@ interface MusicPlayRepository {
     val currentSongFlow: Flow<Song?>  // 新增
     val playListFlow: StateFlow<List<Song>>
     val currentIndexFlow: StateFlow<Int>
+    val currentPosition: StateFlow<Long>
+    val isPlaying: StateFlow<Boolean>
+    val currentPlayingSong: StateFlow<Song?>
 
     suspend fun playNewList(songs: List<Song>, startIndex: Int = 0)
     suspend fun playAt(index: Int)
     suspend fun playNext()
     suspend fun playPrevious()
-    suspend fun play(song: Song)
 
+    fun play(song: Song)
     fun pause()
     fun resume()
     fun seekTo(position: Long)
@@ -34,11 +37,20 @@ class MusicPlayRepositoryImpl @Inject constructor(
     override val playListFlow: StateFlow<List<Song>>
         get() = playerListRepository.playList
 
+    override val isPlaying: StateFlow<Boolean>
+        get() = playerRepository.isPlaying
+
     override val currentIndexFlow: StateFlow<Int>
         get() = playerListRepository.currentIndex
 
     override val currentSongFlow: Flow<Song?>
         get() = playerListRepository.currentSongFlow
+
+    override val currentPosition: StateFlow<Long>
+        get() = playerRepository.currentPosition
+
+    override val currentPlayingSong: StateFlow<Song?>
+        get() = playerListRepository.currentPlayingSong
 
     override suspend fun playNewList(songs: List<Song>, startIndex: Int) {
         playerListRepository.playNewList(songs, startIndex)
@@ -60,15 +72,18 @@ class MusicPlayRepositoryImpl @Inject constructor(
         playerListRepository.currentSongFlow.firstOrNull()?.let { playerRepository.play(it) }
     }
 
-    override suspend fun play(song: Song) {
+    override fun play(song: Song) {
         playerRepository.play(song)
         playerListRepository.playNewList(listOf(song), 0)
     }
 
     override fun pause() = playerRepository.pause()
-    override fun resume() {} // TODO
+    override fun resume() = playerRepository.resume()
     override fun seekTo(position: Long) = playerRepository.seekTo(position)
-    override fun changeMode() = playerRepository.toggleMode()
+    override fun changeMode() = playerListRepository.changeMode()
 
+    suspend fun playCurrentSong() {
+        currentSongFlow.firstOrNull()?.let { playerRepository.play(it) }
+    }
 
 }

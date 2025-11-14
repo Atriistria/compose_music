@@ -1,7 +1,7 @@
 package com.atri.composemusic.core.common.di
 
 import com.atri.composemusic.core.common.Dispatcher
-import com.atri.composemusic.core.common.DispatcherType
+import com.atri.composemusic.core.common.CmDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,14 +14,14 @@ import kotlinx.coroutines.Dispatchers
 object DispatcherModule {
 
     @Provides
-    @Dispatcher(DispatcherType.IO)
+    @Dispatcher(CmDispatcher.IO)
     fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
-    @Dispatcher(DispatcherType.Default)
+    @Dispatcher(CmDispatcher.Default)
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
-    @Dispatcher(DispatcherType.Main)
+    @Dispatcher(CmDispatcher.Main)
     fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }

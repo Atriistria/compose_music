@@ -1,6 +1,6 @@
 package com.atri.composemusic.feature.myfavor
 
-import android.net.Uri
+import android.os.Environment
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,23 +24,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.atri.composemusic.core.model.Song
 import com.atri.composemusic.feature.myfavor.model.FavorSongItem
 import com.atri.composemusic.feature.player.MusicPlayerIntent
 import com.atri.composemusic.feature.player.MusicPlayerViewModel
 import com.atri.composemusic.navigation.NavigationViewModel
 import com.atri.composemusic.navigation.Screen
-import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
-
 
 @Composable
 fun SongPageScreen(
     navigationViewModel: NavigationViewModel,
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel()
 ) {
+    val uri = "https://storage.googleapis.com/exoplayer-test-media-0/play.mp3"
     val song = Song(1, "攀升", "攀升", "", 1,
-        "https://com.atri.composemusic/raw/song".toUri())
+        "${Environment.getExternalStorageDirectory()}/卡音/Music/tenchou (8级别).flac".toUri())
     val itemList = listOf(FavorSongItem(1,1,song))
     Column(
         modifier = Modifier.fillMaxSize()

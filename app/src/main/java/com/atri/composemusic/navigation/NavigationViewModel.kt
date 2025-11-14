@@ -3,7 +3,6 @@ package com.atri.composemusic.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -16,14 +15,16 @@ class NavigationViewModel @Inject constructor() : ViewModel(), AppNavigator {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     override val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
 
-    private var navJob: Job? = null
-    private val navDebounceTime = 300L
+    private val navDebounceTime = 500L
+    private var isNavigating = false
 
     override fun navigateTo(route: String) {
-        navJob?.cancel()
-        navJob = viewModelScope.launch {
-            delay(navDebounceTime)
+        if (isNavigating) return
+         viewModelScope.launch {
+             isNavigating = true
             _navigationEvent.emit(NavigationEvent.Navigate(route))
+             delay(navDebounceTime)
+             isNavigating = false
         }
     }
 
@@ -34,8 +35,7 @@ class NavigationViewModel @Inject constructor() : ViewModel(), AppNavigator {
     }
 
     override fun navigateUp() {
-        navJob?.cancel()
-        navJob = viewModelScope.launch {
+        viewModelScope.launch {
             delay(navDebounceTime)
             _navigationEvent.emit(NavigationEvent.NavigateUp)
         }

@@ -13,54 +13,54 @@ object MLog {
     private val dateFormat = java.text.SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
 
     @JvmStatic
-    fun d(msg: String) {
+    fun d(msg: Any) {
         log(Log.DEBUG, getCallerClassName(), msg)
     }
 
     @JvmStatic
-    fun d(tag: String, msg: String) {
+    fun d(tag: String, msg: Any) {
         log(Log.DEBUG, tag, msg)
     }
 
     @JvmStatic
-    fun i(msg: String) {
+    fun i(msg: Any) {
         log(Log.INFO, getCallerClassName(), msg)
     }
 
     @JvmStatic
-    fun i(tag: String, msg: String) {
+    fun i(tag: String, msg: Any) {
         log(Log.INFO, tag, msg)
     }
 
     @JvmStatic
-    fun w(msg: String) {
+    fun w(msg: Any) {
         log(Log.WARN, getCallerClassName(), msg)
     }
 
     @JvmStatic
-    fun w(tag: String,msg: String) {
+    fun w(tag: String,msg: Any) {
         log(Log.WARN, tag, msg)
     }
 
     @JvmStatic
-    fun w(ex: Throwable, module: String = "GENERIC") {
+    fun w(ex: Throwable, module: Any = "GENERIC") {
         val tag = getCallerClassName()
         val message = "[模块: $module] ${ex.javaClass.simpleName}: ${ex.message}\n${Log.getStackTraceString(ex)}"
         log(Log.WARN, tag, message)
     }
 
     @JvmStatic
-    fun e(msg: String) {
+    fun e(msg: Any) {
         log(Log.ERROR, getCallerClassName(), msg)
     }
 
     @JvmStatic
-    fun e(tag: String, msg: String) {
+    fun e(tag: String, msg: Any) {
         log(Log.ERROR, tag, msg)
     }
 
     @JvmStatic
-    fun e(ex: Throwable, module: String = "GENERIC") {
+    fun e(ex: Throwable, module: Any = "GENERIC") {
         val tag = getCallerClassName()
         val message = when (ex) {
             is FileNotFoundException -> {
@@ -106,7 +106,7 @@ object MLog {
         log(Log.ERROR, tag, message)
     }
 
-    private fun log(priority: Int, tag: String, msg: String) {
+    private fun log(priority: Int, tag: String, msg: Any) {
         if (!BuildConfig.DEBUG) return
         val time = dateFormat.format(java.util.Date())
         Log.println(priority, tag, "$time $msg")

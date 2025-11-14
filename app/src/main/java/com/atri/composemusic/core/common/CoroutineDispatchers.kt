@@ -5,6 +5,6 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class Dispatcher(val type: DispatcherType)
+annotation class Dispatcher(val type: CmDispatcher)
 
-enum class DispatcherType { IO, Default, Main }
+enum class CmDispatcher { IO, Default, Main }

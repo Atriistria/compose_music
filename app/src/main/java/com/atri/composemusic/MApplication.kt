@@ -7,6 +7,7 @@ import android.os.StrictMode.ThreadPolicy.Builder
 import com.atri.composemusic.core.common.profiler.FrameRateMonitor
 import com.atri.composemusic.util.MToast
 import dagger.hilt.android.HiltAndroidApp
+import org.intellij.lang.annotations.Language
 
 @HiltAndroidApp
 class MApplication: Application() {
@@ -16,7 +17,6 @@ class MApplication: Application() {
 
         setStrictModePolicy()
         MToast.init(this)
-        FrameRateMonitor.start()
     }
 
     private fun isDebuggable(): Boolean {

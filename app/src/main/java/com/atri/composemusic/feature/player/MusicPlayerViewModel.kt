@@ -2,7 +2,6 @@ package com.atri.composemusic.feature.player
 
 import androidx.lifecycle.viewModelScope
 import com.atri.composemusic.core.data.repository.MusicPlayRepository
-import com.atri.composemusic.core.data.repository.PlayerRepository
 import com.atri.composemusic.core.model.Song
 import com.atri.composemusic.core.ui.BaseViewModel
 import com.atri.composemusic.core.ui.UiEffect
@@ -17,10 +16,6 @@ import javax.inject.Inject
 class MusicPlayerViewModel @Inject constructor(
     private val repository: MusicPlayRepository
 ) : BaseViewModel<MusicPlayerUiState, MusicPlayerIntent, MusicPlayerEffect>(MusicPlayerUiState()) {
-
-    init {
-
-    }
 
     override fun onIntent(intent: MusicPlayerIntent) {
         viewModelScope.launch {
@@ -134,7 +129,6 @@ class MusicPlayerViewModel @Inject constructor(
             )
         }
     }
-
 
 }
 

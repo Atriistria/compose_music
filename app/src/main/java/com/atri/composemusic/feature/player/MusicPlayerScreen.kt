@@ -1,5 +1,6 @@
 package com.atri.composemusic.feature.player
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -80,20 +81,18 @@ fun MusicPlayerScreen(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> { /* 歌词页 (透明) */ }
-                1 -> MusicPlayerScreen(state, viewModel::dispatch) // MusicPlayer 也是透明的
-                2 -> { /* 推荐页 (透明) */ }
+                0 -> { }
+                1 -> MusicPlayerScreen(state, viewModel::dispatch)
+                2 -> { }
             }
         }
-
-        // --- 悬浮在上方的 UI ---
 
         // 顶部自定义栏，用 Row 来实现
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .statusBarsPadding() // 适配状态栏，避免内容顶到最上面
+                .statusBarsPadding()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -137,7 +136,7 @@ fun PagerIndicator(
             val isSelected = pagerState.currentPage == index
 
             val width by animateDpAsState(
-                targetValue = if (isSelected) 16.dp else 4.dp,
+                targetValue = if (isSelected) 12.dp else 4.dp,
                 // animationSpec 可以自定义动画效果，比如速度
                 animationSpec = tween(durationMillis = 300),
                 label = "PagerIndicatorWidth"
@@ -185,7 +184,6 @@ fun MusicPlayerScreen(
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = 15000,
-                delayMillis = 0,
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
@@ -226,6 +224,14 @@ fun MusicPlayerScreen(
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(Color.Black)
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter) // 对齐到父容器顶部中心
+                        .padding(top = 10.dp)       // 向下移动一点，使其在圆内
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -348,6 +354,7 @@ fun MusicPlayerScreen(
 
 }
 
+@SuppressLint("DefaultLocale")
 fun formatDuration(durationMillis: Long): String {
     if (durationMillis < 0) return "--:--"
     val totalSeconds = (durationMillis / 1000).toInt()
