@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.player
+package com.atri.composemusic.feature.musicplay
 
 import androidx.lifecycle.viewModelScope
 import com.atri.composemusic.core.data.repository.MusicPlayRepository

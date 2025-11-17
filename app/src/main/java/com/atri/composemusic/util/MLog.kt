@@ -116,7 +116,7 @@ object MLog {
         val stackTrace = Throwable().stackTrace
         for (i in stackTrace.indices) {
             val ste = stackTrace[i]
-            if (!ste.className.contains("mLog")) {
+            if (!ste.className.contains("MLog")) {
                 val simpleClassName = ste.className.substringAfterLast(".")
 
                 return simpleClassName.substringBefore("$")

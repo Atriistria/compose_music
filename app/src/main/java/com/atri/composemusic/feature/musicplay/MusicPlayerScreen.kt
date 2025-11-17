@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.player
+package com.atri.composemusic.feature.musicplay
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState

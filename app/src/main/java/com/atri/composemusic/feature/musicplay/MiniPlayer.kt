@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.player
+package com.atri.composemusic.feature.musicplay
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
@@ -68,7 +69,7 @@ fun MiniPlayerOverlay(navigateTo: () -> Unit) {
                 onLongClick = { isExpanded = !isExpanded },
             )
     ) {
-        // 使用 Box 来实现 Image 的绝对定位，使其可以自由放置
+
         Box(modifier = Modifier.fillMaxSize()) {
             // 专辑封面
             Image(
@@ -76,10 +77,10 @@ fun MiniPlayerOverlay(navigateTo: () -> Unit) {
                 contentDescription = "Album Art",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp) // 添加一些内边距，确保 Image 不会完全贴边
+                    .padding(start = 8.dp, top = 8.dp)
                     .size(imageSize)
                     .clip(RoundedCornerShape(12.dp))
-                    .align(Alignment.TopStart) // 将 Image 放置在 Box 的左上角
+                    .align(Alignment.TopStart)
             )
             ExpandedContent(modifier = Modifier.align(Alignment.BottomStart),isExpanded = isExpanded)
         }
@@ -130,7 +131,7 @@ fun ExpandedContent(modifier: Modifier,isExpanded: Boolean) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
             }
             IconButton(onClick = { /* Show Playlist */ }) {
-                Icon(Icons.Default.Lock, contentDescription = "Playlist")
+                Icon(Icons.Default.List, contentDescription = "Playlist")
             }
         }
     }

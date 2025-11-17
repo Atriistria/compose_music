@@ -1,10 +1,12 @@
-package com.atri.composemusic.feature.player
+package com.atri.composemusic.feature.musicplay.service
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -39,6 +41,7 @@ class PlayerService: LifecycleService() {
     @Inject
     lateinit var repository: MusicPlayRepository
 
+    private val playerReceiver = PlayerReceiver()
     private lateinit var mediaSession: MediaSessionCompat
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -47,6 +50,7 @@ class PlayerService: LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         super.onCreate()
 
@@ -58,12 +62,31 @@ class PlayerService: LifecycleService() {
         updatePlaybackState(PlaybackStateCompat.STATE_STOPPED)
         startForeground(NOTIFICATION_ID, createNotification())
 
+        val intentFilter = IntentFilter().apply {
+            addAction("ACTION_FAVORITE")
+            addAction("ACTION_LYRICS")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(playerReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(playerReceiver, intentFilter)
+        }
+
         lifecycleScope.launch {
             repository.currentPosition.collectLatest { position ->
                 updatePlaybackState(
-                    if (repository.isPlaying.value) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,position,
+                    if (repository.isPlaying.value) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
+                    position,
                     if (repository.isPlaying.value) 1.0f else 0f
                 )
+            }
+        }
+
+        lifecycleScope.launch {
+            repository.isPlaying.collectLatest {
+                val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(NOTIFICATION_ID, createNotification(it))
             }
         }
 
@@ -78,7 +101,7 @@ class PlayerService: LifecycleService() {
 
             updateMetadata(song)
             updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
-            startForeground(NOTIFICATION_ID, createNotification(song))
+
             if (repository.currentPlayingSong.value != null) {
                 repository.resume()
             } else {
@@ -89,17 +112,17 @@ class PlayerService: LifecycleService() {
         override fun onPause() {
             super.onPause()
             updatePlaybackState(PlaybackStateCompat.STATE_PAUSED)
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(NOTIFICATION_ID, createNotification())
             repository.pause()
         }
 
         override fun onSkipToNext() {
             super.onSkipToNext()
+            MLog.e("onSkipToNext")
         }
 
         override fun onSkipToPrevious() {
             super.onSkipToPrevious()
+            MLog.e("onSkipToPrevious")
         }
 
         override fun onSeekTo(pos: Long) {
@@ -109,10 +132,8 @@ class PlayerService: LifecycleService() {
 
         override fun onStop() {
             super.onStop()
-            MLog.e("onStop")
             stopSelf()
         }
-
 
     }
 
@@ -131,7 +152,7 @@ class PlayerService: LifecycleService() {
         mediaSession.setPlaybackState(playbackStateBuilder.build())
     }
 
-    private fun createNotification(song: Song ?= null): Notification {
+    private fun createNotification(isPlaying: Boolean = false): Notification {
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
@@ -140,8 +161,8 @@ class PlayerService: LifecycleService() {
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(song?.title ?: "未知")
-            .setContentText(song?.artist ?: "未知艺术家")
+            .setContentTitle("未知")
+            .setContentText("未知艺术家")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
@@ -152,7 +173,7 @@ class PlayerService: LifecycleService() {
 
         builder.setStyle(mediaStyle)
             .addAction(
-                R.drawable.ic_launcher_foreground, "喜欢",
+                R.drawable.ic_like, "喜欢",
                 PendingIntent.getBroadcast(this, 0, Intent(this, PlayerReceiver::class.java).apply {
                     action = "ACTION_FAVORITE"
                 }, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -165,7 +186,7 @@ class PlayerService: LifecycleService() {
                 )
             )
             .addAction(
-                if(!repository.isPlaying.value) R.drawable.ic_play else R.drawable.ic_pause, "PlayPause",
+                if(!isPlaying) R.drawable.ic_play else R.drawable.ic_pause, "PlayPause",
                 MediaButtonReceiver.buildMediaButtonPendingIntent(
                     this,
                     PlaybackStateCompat.ACTION_PLAY_PAUSE
@@ -179,7 +200,7 @@ class PlayerService: LifecycleService() {
                 )
             )
             .addAction(
-                R.drawable.ic_launcher_foreground, "歌词",
+                R.drawable.ic_lyric, "歌词",
                 PendingIntent.getBroadcast(this, 1, Intent(this, PlayerReceiver::class.java).apply {
                     action = "ACTION_LYRICS"
                 }, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -191,6 +212,7 @@ class PlayerService: LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
         mediaSession.release()
+        unregisterReceiver(playerReceiver)
     }
 
     private fun getAudioDuration(uri: Uri): Long? {

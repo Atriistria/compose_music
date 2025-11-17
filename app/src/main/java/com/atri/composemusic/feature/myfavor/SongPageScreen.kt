@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.atri.composemusic.core.model.Song
+import com.atri.composemusic.feature.musicplay.MusicPlayerIntent
+import com.atri.composemusic.feature.musicplay.MusicPlayerViewModel
 import com.atri.composemusic.feature.myfavor.model.FavorSongItem
-import com.atri.composemusic.feature.player.MusicPlayerIntent
-import com.atri.composemusic.feature.player.MusicPlayerViewModel
 import com.atri.composemusic.navigation.NavigationViewModel
 import com.atri.composemusic.navigation.Screen
 

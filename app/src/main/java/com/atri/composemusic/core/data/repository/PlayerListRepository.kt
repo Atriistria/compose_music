@@ -26,17 +26,13 @@ interface PlayerListRepository {
 class PlayerListRepositoryImpl @Inject constructor() : PlayerListRepository {
 
     private val _playList: MutableStateFlow<List<Song>> = MutableStateFlow(emptyList())
+    override val playList: StateFlow<List<Song>> get() = _playList
+
     private val _currentIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+    override val currentIndex: StateFlow<Int> get() = _currentIndex
+
     private val _currentPlayingSong: MutableStateFlow<Song?> = MutableStateFlow(null)
-
-    override val playList: StateFlow<List<Song>>
-        get() = _playList
-
-    override val currentIndex: StateFlow<Int>
-        get() = _currentIndex
-
-    override val currentPlayingSong: StateFlow<Song?>
-        get() = _currentPlayingSong
+    override val currentPlayingSong: StateFlow<Song?> get() = _currentPlayingSong
 
     override val currentSongFlow: Flow<Song?> = combine(_playList, _currentIndex) { list, index ->
         list.getOrNull(index).also { _currentPlayingSong.value = it }
@@ -45,7 +41,6 @@ class PlayerListRepositoryImpl @Inject constructor() : PlayerListRepository {
     override fun playNewList(songs: List<Song>, startIndex: Int) {
         _playList.value = songs
         _currentIndex.value = startIndex.coerceIn(songs.indices)
-        MLog.d("playNewList: ${_playList.value} $startIndex")
     }
 
     override suspend fun playAt(index: Int) {
@@ -55,11 +50,19 @@ class PlayerListRepositoryImpl @Inject constructor() : PlayerListRepository {
     }
 
     override suspend fun playNext() {
-        _currentIndex.value = (_currentIndex.value + 1).coerceAtMost(_playList.value.lastIndex)
+        if (_playList.value.isEmpty()) return
+
+        val currentListSize = _playList.value.size
+        _currentIndex.value = (_currentIndex.value + 1) % currentListSize
+        MLog.d("Play next to index: ${_currentIndex.value}")
     }
 
     override suspend fun playPrevious() {
-        _currentIndex.value = (_currentIndex.value - 1).coerceAtLeast(0)
+        if (_playList.value.isEmpty()) return
+
+        val currentListSize = _playList.value.size
+        _currentIndex.value = (_currentIndex.value - 1 + currentListSize) % currentListSize
+        MLog.d("Play previous to index: ${_currentIndex.value}")
     }
 
     override fun changeMode() {

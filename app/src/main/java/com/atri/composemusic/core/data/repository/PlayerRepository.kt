@@ -3,10 +3,12 @@ package com.atri.composemusic.core.data.repository
 import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import com.atri.composemusic.core.common.Dispatcher
 import com.atri.composemusic.core.common.CmDispatcher
+import com.atri.composemusic.core.common.Dispatcher
 import com.atri.composemusic.core.model.Song
+import com.atri.composemusic.util.MLog
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -38,13 +40,17 @@ interface PlayerRepository {
 
 }
 
+@UnstableApi
 @Singleton
 class PlayerRepositoryImpl @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(CmDispatcher.Main) private val mainDispatcher: kotlinx.coroutines.CoroutineDispatcher,
 ) : PlayerRepository {
 
-    private val exoPlayer = ExoPlayer.Builder(context).build()
+    private val exoPlayer = ExoPlayer.Builder(context)
+        .setUseLazyPreparation(true)
+        .setHandleAudioBecomingNoisy(true)
+        .build()
 
     private val _isPlaying = MutableStateFlow(false)
     override val isPlaying: StateFlow<Boolean> get() = _isPlaying.asStateFlow()
@@ -66,6 +72,7 @@ class PlayerRepositoryImpl @Inject constructor(
     init {
         exoPlayer.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
+                MLog.e("isPlaying: $isPlaying")
                 _isPlaying.value = isPlaying
                 if (isPlaying) {
                     startPositionUpdates()

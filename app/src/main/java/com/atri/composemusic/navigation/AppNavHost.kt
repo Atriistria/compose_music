@@ -15,8 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.atri.composemusic.feature.login.LoginScreen
 import com.atri.composemusic.feature.main.MainScreen
+import com.atri.composemusic.feature.musicplay.MusicPlayerScreen
 import com.atri.composemusic.feature.myfavor.MyFavor
-import com.atri.composemusic.feature.player.MusicPlayerScreen
 
 @Composable
 fun AppNavHost(

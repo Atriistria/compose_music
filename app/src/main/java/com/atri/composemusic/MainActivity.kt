@@ -18,9 +18,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.atri.composemusic.navigation.AppNavHost
 import com.atri.composemusic.core.ui.theme.AppTheme
-import com.atri.composemusic.feature.player.PlayerService
+import com.atri.composemusic.feature.musicplay.service.PlayerService
+import com.atri.composemusic.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
