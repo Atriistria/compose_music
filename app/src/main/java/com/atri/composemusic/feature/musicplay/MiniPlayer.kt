@@ -42,7 +42,7 @@ import com.atri.composemusic.R
 
 @Composable
 fun MiniPlayerOverlay(navigateTo: () -> Unit) {
-    val bottomNavBarHeight = 0.dp
+    val bottomNavBarHeight = 80.dp
     val playerOffset = -bottomNavBarHeight / 1.3f
 
     var isExpanded by remember { mutableStateOf(false) }

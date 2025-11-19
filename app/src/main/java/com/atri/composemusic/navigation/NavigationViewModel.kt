@@ -29,8 +29,12 @@ class NavigationViewModel @Inject constructor() : ViewModel(), AppNavigator {
     }
 
     override fun navigateBack() {
+        if (isNavigating) return
         viewModelScope.launch {
+            isNavigating = true
             _navigationEvent.emit(NavigationEvent.NavigateBack)
+            delay(navDebounceTime)
+            isNavigating = false
         }
     }
 

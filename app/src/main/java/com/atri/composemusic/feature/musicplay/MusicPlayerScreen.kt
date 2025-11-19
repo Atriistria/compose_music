@@ -1,10 +1,8 @@
 package com.atri.composemusic.feature.musicplay
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -32,7 +30,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,9 +46,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.atri.composemusic.R
 import com.atri.composemusic.navigation.NavigationViewModel
+import kotlin.math.absoluteValue
 
 @Composable
 fun MusicPlayerScreen(
@@ -133,33 +134,28 @@ fun PagerIndicator(
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(pageCount) { index ->
-            val isSelected = pagerState.currentPage == index
+            // 计算当前指示点相对于当前页面的偏移量
+            val pageOffset = ((pagerState.currentPage - index) + pagerState.currentPageOffsetFraction).absoluteValue
 
-            val width by animateDpAsState(
-                targetValue = if (isSelected) 12.dp else 4.dp,
-                // animationSpec 可以自定义动画效果，比如速度
-                animationSpec = tween(durationMillis = 300),
-                label = "PagerIndicatorWidth"
-            )
+            // 根据偏移量计算宽度和颜色插值因子 (0 = 完全选中, 1 = 完全未选中)
+            val interpolationFactor = pageOffset.coerceIn(0f, 1f)
 
-            val color by animateColorAsState(
-                targetValue = if (isSelected) activeColor else inactiveColor,
-                animationSpec = tween(durationMillis = 300),
-                label = "PagerIndicatorColor"
-            )
+            // 使用插值因子计算实际的宽度和颜色
+            val width = lerp(12.dp, 4.dp, interpolationFactor)
+            val color = androidx.compose.ui.graphics.lerp(activeColor, inactiveColor, interpolationFactor)
 
             Box(
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
-                    .size(width = width, height = 4.dp) // 使用动画化的宽度
+                    .size(width = width, height = 4.dp)
                     .clip(CircleShape)
-                    .background(color) // 使用动画化的颜色
+                    .background(color)
             )
-
-            // --- 动画修改结束 ---
         }
     }
 }
+
+
 
 @Composable
 fun MusicPlayerScreen(
@@ -186,7 +182,7 @@ fun MusicPlayerScreen(
                 durationMillis = 15000,
                 easing = LinearEasing
             ),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Reverse
         ),
         label = "rotation"
     )
@@ -200,13 +196,13 @@ fun MusicPlayerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 100.dp)
+                .padding(top = 60.dp)
                 .align(Alignment.Center)
         ) {
             // 专辑封面
             Box(
                 modifier = Modifier
-                    .size(280.dp)
+                    .size(340.dp)
                     .graphicsLayer {
                         rotationZ = rotationAngle
                     }
@@ -234,7 +230,7 @@ fun MusicPlayerScreen(
                         .background(Color.White)
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             // 歌曲信息
             state.playlistState.let {
@@ -252,10 +248,24 @@ fun MusicPlayerScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             // 进度条
             Column(modifier = Modifier.fillMaxWidth()) {
+                Slider(
+                    value = state.hasDuration.toFloat(),
+                    onValueChange = { newValue -> onIntent(MusicPlayerIntent.SeekTo(newValue.toLong())) },
+                    valueRange = 0f..(state.currentSong?.duration?.toFloat() ?: 1f),
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        activeTrackColor = progressStartColor,
+                        inactiveTrackColor = Color.White.copy(alpha = 0.3f),
+                        thumbColor = progressEndColor
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -272,21 +282,8 @@ fun MusicPlayerScreen(
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Slider(
-                    value = state.hasDuration.toFloat(),
-                    onValueChange = { newValue -> onIntent(MusicPlayerIntent.SeekTo(newValue.toLong())) },
-                    valueRange = 0f..(state.currentSong?.duration?.toFloat() ?: 1f),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = progressStartColor,
-                        inactiveTrackColor = Color.White.copy(alpha = 0.3f),
-                        thumbColor = progressEndColor
-                    )
-                )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            }
 
             // 控制按钮
             Row(
@@ -294,10 +291,11 @@ fun MusicPlayerScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = {  }) {
+
+                IconButton(onClick = { onIntent(MusicPlayerIntent.Like) }) {
                     Icon(
-                        Icons.Default.List,
-                        contentDescription = "Queue",
+                        Icons.Default.Favorite,
+                        contentDescription = "Like",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(36.dp)
                     )
@@ -305,7 +303,7 @@ fun MusicPlayerScreen(
 
                 IconButton(onClick = { onIntent(MusicPlayerIntent.Previous) }) {
                     Icon(
-                        Icons.Default.Refresh,
+                        painterResource(R.drawable.icon_prev),
                         contentDescription = "Previous",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(36.dp)
@@ -331,7 +329,7 @@ fun MusicPlayerScreen(
 
                 IconButton(onClick = { onIntent(MusicPlayerIntent.Next) }) {
                     Icon(
-                        Icons.Default.Refresh,
+                        painterResource(R.drawable.icon_next),
                         contentDescription = "Next",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(36.dp)
@@ -339,15 +337,16 @@ fun MusicPlayerScreen(
 
                 }
 
-                IconButton(onClick = { onIntent(MusicPlayerIntent.Like) }) {
+                IconButton(onClick = {  }) {
                     Icon(
-                        Icons.Default.Favorite,
-                        contentDescription = "Like",
+                        Icons.Default.List,
+                        contentDescription = "Queue",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(36.dp)
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(36.dp))
 
         }
     }
