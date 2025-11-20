@@ -1,4 +1,4 @@
-package com.atri.composemusic.core.di
+package com.atri.composemusic.core.datastore.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

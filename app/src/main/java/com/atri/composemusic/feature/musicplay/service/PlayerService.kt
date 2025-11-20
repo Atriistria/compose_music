@@ -32,7 +32,6 @@ import javax.inject.Inject
 
 private const val NOTIFICATION_ID = 1
 private const val NOTIFICATION_CHANNEL_ID = "player_channel"
-private const val NOTIFICATION_CHANNEL_NAME = "Player Controls"
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -155,7 +154,7 @@ class PlayerService: LifecycleService() {
     private fun createNotification(isPlaying: Boolean = false): Notification {
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
+            getString(R.string.player_controls),
             NotificationManager.IMPORTANCE_LOW
         )
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)

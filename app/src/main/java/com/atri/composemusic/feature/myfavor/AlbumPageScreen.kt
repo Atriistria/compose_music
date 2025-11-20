@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
@@ -61,7 +62,7 @@ fun AlbumPageScreen(
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.KeyboardArrowRight, contentDescription = "click", modifier = Modifier
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "click", modifier = Modifier
                             .fillMaxHeight()
                             .align(Alignment.CenterVertically))
                     }

@@ -17,14 +17,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -64,7 +64,7 @@ fun MyFavor(
                     navigationViewModel.navigateBack()
                 }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
                     )
                 }
@@ -88,7 +88,7 @@ fun MyFavor(
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(padding)) {
-            TabRow(selectedTabIndex = pagerState.currentPage) {
+            PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = pagerState.currentPage == index,
@@ -103,7 +103,11 @@ fun MyFavor(
 
             }
 
-            HorizontalPager(state = pagerState) { page ->
+            HorizontalPager(
+                state = pagerState,
+                key = { index -> tabs[index] },
+                beyondViewportPageCount = 1
+            ) { page ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize(),

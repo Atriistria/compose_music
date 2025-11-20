@@ -5,10 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
 
+        enableEdgeToEdge()
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.uiState.onEach {

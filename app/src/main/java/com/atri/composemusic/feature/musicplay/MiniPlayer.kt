@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
@@ -131,7 +132,7 @@ fun ExpandedContent(modifier: Modifier,isExpanded: Boolean) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Pause")
             }
             IconButton(onClick = { /* Show Playlist */ }) {
-                Icon(Icons.Default.List, contentDescription = "Playlist")
+                Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Playlist")
             }
         }
     }

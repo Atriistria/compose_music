@@ -1,4 +1,4 @@
-package com.atri.composemusic.core.common
+package com.atri.composemusic.feature.musicplay
 
 fun interface PlayModeStrategy{
     fun next(currentIndex: Int, size: Int): Int

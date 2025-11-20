@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.List
@@ -339,7 +340,7 @@ fun MusicPlayerScreen(
 
                 IconButton(onClick = {  }) {
                     Icon(
-                        Icons.Default.List,
+                        Icons.AutoMirrored.Filled.List,
                         contentDescription = "Queue",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(36.dp)

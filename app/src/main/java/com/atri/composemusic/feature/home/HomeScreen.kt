@@ -3,6 +3,7 @@ package com.atri.composemusic.feature.home
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Text
@@ -14,7 +15,7 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     listState: LazyListState
 ) {
-    LazyColumn(state = listState) {
+    LazyColumn(state = listState, modifier = Modifier.statusBarsPadding()) {
         items(20) { index ->
             Text("Item $index", modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(32.dp))
