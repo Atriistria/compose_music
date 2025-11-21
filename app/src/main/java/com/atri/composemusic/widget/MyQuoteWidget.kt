@@ -42,9 +42,9 @@ fun MyWidgetContent(quote: String) {
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(Color.DarkGray) // background 来自 androidx.glance.background
-            .padding(16.dp), // padding 来自 androidx.glance.layout.padding
-        verticalAlignment = Alignment.Vertical.CenterVertically, // Alignment 来自 androidx.glance.layout.Alignment
+            .background(Color.DarkGray)
+            .padding(16.dp),
+        verticalAlignment = Alignment.Vertical.CenterVertically,
         horizontalAlignment = Alignment.Horizontal.CenterHorizontally
     ) {
         // Text 来自 androidx.glance.text.Text

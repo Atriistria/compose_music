@@ -1,9 +1,10 @@
-package com.atri.composemusic.feature.home
+package com.atri.composemusic.navigation
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun HomeScreen(
+fun CmNavHost(
+
 ) {
 
 }

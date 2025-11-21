@@ -11,7 +11,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -93,7 +92,7 @@ fun MainScreen(
             },
             // navigationSuiteColors = NavigationSuiteDefaults.colors(...)
         ) {
-            MainContent(navController, listState, navigationViewModel)
+            MainContent(navController, navigationViewModel)
         }
 
         AnimatedVisibility(
@@ -118,7 +117,6 @@ fun MainScreen(
 @Composable
 fun MainContent(
     navController: NavHostController,
-    listState: LazyListState,
     navigationViewModel: NavigationViewModel
 ) {
     NavHost(
@@ -129,7 +127,7 @@ fun MainContent(
                 route = "bottom_root"
             ) {
                 composable(BottomNavScreen.Home.route) {
-                    HomeScreen(listState)
+                    HomeScreen()
                 }
 
                 composable(BottomNavScreen.Profile.route) {

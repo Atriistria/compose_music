@@ -23,14 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.atri.composemusic.R
-import com.atri.composemusic.navigation.NavigationViewModel
-import com.atri.composemusic.navigation.Screen
 
 @Composable
 fun ProfileScreen(
-    navigationViewModel: NavigationViewModel,
+    navigate: () -> Unit
 ) {
-    val navigate = { navigationViewModel.navigateTo(Screen.MyFavor.route) }
+    //val navigate = { navigationViewModel.navigateTo(Screen.MyFavor.route) }
     ProfileScreen(navigate, "")
 }
 
