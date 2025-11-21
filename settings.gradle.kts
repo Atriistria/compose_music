@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ComposeApp"
+rootProject.name = "ComposeMusic"
 include(":app")
