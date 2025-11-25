@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -276,7 +275,7 @@ fun AppTheme(
         SideEffect {
             val window = (view.context as Activity).window
             // 设置状态栏背景透明
-            window.statusBarColor = Color.Transparent.toArgb()
+            WindowCompat.setDecorFitsSystemWindows(window, false)
             // 设置状态栏图标颜色（黑色或白色），根据是否是深色模式决定
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }

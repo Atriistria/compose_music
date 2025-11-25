@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.myfavor
+package com.atri.composemusic.feature.myfavourite
 
 import android.os.Environment
 import androidx.compose.foundation.clickable
@@ -29,13 +29,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.atri.composemusic.core.model.Song
 import com.atri.composemusic.feature.musicplay.MusicPlayerIntent
 import com.atri.composemusic.feature.musicplay.MusicPlayerViewModel
-import com.atri.composemusic.feature.myfavor.model.FavorSongItem
-import com.atri.composemusic.navigation.NavigationViewModel
-import com.atri.composemusic.navigation.Screen
+import com.atri.composemusic.feature.myfavourite.model.FavorSongItem
 
 @Composable
 fun SongPageScreen(
-    navigationViewModel: NavigationViewModel,
     musicPlayerViewModel: MusicPlayerViewModel = hiltViewModel()
 ) {
     val uri = "https://storage.googleapis.com/exoplayer-test-media-0/play.mp3"
@@ -70,7 +67,6 @@ fun SongPageScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navigationViewModel.navigateTo(Screen.MusicPlayer.route)
                             musicPlayerViewModel.dispatch(MusicPlayerIntent.Play(it.song))
                         }
                         .padding(start = 15.dp)

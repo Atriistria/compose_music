@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.myfavor
+package com.atri.composemusic.feature.myfavourite
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -44,16 +44,15 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.atri.composemusic.navigation.NavigationViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyFavor(
-    navigationViewModel: NavigationViewModel
+fun MyFavouriteScreen(
 ) {
     val pagerState = rememberPagerState(initialPage = 0) {
         3
+
     }
     val tabs = listOf("歌曲", "专辑", "歌单")
     val coroutineScope = rememberCoroutineScope()
@@ -61,7 +60,7 @@ fun MyFavor(
         TopAppBar(
             navigationIcon = {
                 IconButton(onClick = {
-                    navigationViewModel.navigateBack()
+
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -114,10 +113,10 @@ fun MyFavor(
                     contentAlignment = Alignment.Center
                 ) {
                     when (page) {
-                        0 -> SongPageScreen(navigationViewModel)
+                        0 -> SongPageScreen()
                         1 -> AlbumPageScreen {  }
                         2 -> PlayListPage()
-                        else -> SongPageScreen(navigationViewModel)
+                        else -> SongPageScreen()
                     }
                 }
 

@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.myfavor
+package com.atri.composemusic.feature.myfavourite
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,7 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.atri.composemusic.R
-import com.atri.composemusic.feature.myfavor.model.FavorAlbumItem
+import com.atri.composemusic.feature.myfavourite.model.FavorAlbumItem
 
 @Composable
 fun AlbumPageScreen(

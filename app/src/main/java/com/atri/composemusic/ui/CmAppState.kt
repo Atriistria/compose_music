@@ -7,14 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.util.trace
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.atri.composemusic.core.data.util.NetworkMonitor
 import com.atri.composemusic.feature.home.navigateToHome
+import com.atri.composemusic.feature.myfavourite.navigation.navigateToMyFavourite
 import com.atri.composemusic.feature.profile.navigation.navigateToProfile
 import com.atri.composemusic.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
@@ -26,9 +27,8 @@ import kotlinx.coroutines.flow.stateIn
 fun rememberCmAppState(
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    navController: NavController = rememberNavController(),
+    navController: NavHostController = rememberNavController(),
 ) : CmAppState {
-    // TODO 性能监控
     return remember(
         navController,
         coroutineScope,
@@ -44,7 +44,7 @@ fun rememberCmAppState(
 
 @Stable
 class CmAppState(
-    val navController: NavController,
+    val navController: NavHostController,
     coroutineScope: CoroutineScope,
     networkMonitor: NetworkMonitor
 ) {
@@ -92,6 +92,7 @@ class CmAppState(
             when(topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
                 TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
+                TopLevelDestination.MyFavourite -> navController.navigateToMyFavourite(topLevelNavOptions)
             }
 
         }

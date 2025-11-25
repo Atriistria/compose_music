@@ -19,18 +19,25 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.atri.composemusic.core.data.util.NetworkMonitor
 import com.atri.composemusic.core.ui.theme.AppTheme
 import com.atri.composemusic.feature.musicplay.service.PlayerService
-import com.atri.composemusic.navigation.AppNavHost
+import com.atri.composemusic.ui.CmApp
+import com.atri.composemusic.ui.rememberCmAppState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+
     private val viewModel: MainActivityViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -53,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 1001
             )
-        } else{
+        } else {
 
         }
 
@@ -66,9 +73,10 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             AppTheme {
-                val curUiState = uiState
-                if (curUiState is MainActivityUiState.Success)
-                    AppNavHost(isLogin = curUiState.isLogin)
+                val appState = rememberCmAppState(
+                    networkMonitor = networkMonitor
+                )
+                CmApp(appState)
             }
         }
     }

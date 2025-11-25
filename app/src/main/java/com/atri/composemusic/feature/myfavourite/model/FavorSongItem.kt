@@ -1,4 +1,4 @@
-package com.atri.composemusic.feature.myfavor.model
+package com.atri.composemusic.feature.myfavourite.model
 
 import com.atri.composemusic.core.model.Song
 

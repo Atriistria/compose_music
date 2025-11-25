@@ -28,7 +28,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -52,12 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.atri.composemusic.R
-import com.atri.composemusic.navigation.NavigationViewModel
 import kotlin.math.absoluteValue
 
 @Composable
 fun MusicPlayerScreen(
-    navigationViewModel: NavigationViewModel,
     viewModel: MusicPlayerViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -100,7 +97,7 @@ fun MusicPlayerScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 返回按钮
-            IconButton(onClick = { navigationViewModel.navigateBack() }) {
+            IconButton(onClick = {  }) {
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Back", tint = Color.White)
             }
 
