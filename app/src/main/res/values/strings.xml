@@ -5,4 +5,5 @@
     <string name="player_controls">Player Controls</string>
     <string name="exit_login">Exit Login</string>
     <string name="profile_title">Profile</string>
+    <string name="favourite_title">Favourite</string>
 </resources>

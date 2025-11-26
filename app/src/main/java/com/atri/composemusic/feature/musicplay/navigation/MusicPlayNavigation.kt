@@ -13,12 +13,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object MusicPlayBaseRoute
 
-fun NavController.navigateToMusicPlay(navOptions: NavOptions) = navigate(route = MusicPlayRoute, navOptions)
+fun NavController.navigateToMusicPlay(navOptions: NavOptions? = null) = navigate(route = MusicPlayRoute, navOptions)
 
-fun NavGraphBuilder.musicPlayScreen() {
+fun NavGraphBuilder.musicPlayScreen(onBack: () -> Unit) {
     navigation<MusicPlayBaseRoute>(startDestination = MusicPlayRoute) {
         composable<MusicPlayRoute> {
-            MusicPlayerScreen()
+            MusicPlayerScreen(onBack)
         }
     }
 }

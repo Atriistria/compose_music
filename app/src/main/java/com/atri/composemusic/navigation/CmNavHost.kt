@@ -24,7 +24,7 @@ fun CmNavHost(
     ) {
         homeScreen()
         profileScreen {  }
-        musicPlayScreen()
+        musicPlayScreen{ navController.popBackStack() }
         myFavouriteScreen()
     }
 

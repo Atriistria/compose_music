@@ -43,7 +43,7 @@ enum class TopLevelDestination(
     MyFavourite(
         selectedIcon = Icons.Default.Favorite,
         unselectedIcon = Icons.Default.FavoriteBorder,
-        iconTextId = R.string.profile_title,
+        iconTextId = R.string.favourite_title,
         titleTextId = 0,
         route = MyFavouriteRoute::class,
         baseRoute = MyFavouriteBaseRoute::class

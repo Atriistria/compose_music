@@ -55,6 +55,7 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun MusicPlayerScreen(
+    onBack: () -> Unit,
     viewModel: MusicPlayerViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -97,7 +98,9 @@ fun MusicPlayerScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 返回按钮
-            IconButton(onClick = {  }) {
+            IconButton(onClick = {
+                onBack()
+            }) {
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Back", tint = Color.White)
             }
 

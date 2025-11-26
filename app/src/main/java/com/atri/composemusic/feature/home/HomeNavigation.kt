@@ -11,10 +11,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object HomeBaseRoute
 
-fun NavController.navigateToHome(navOptions: NavOptions) = navigate(route = HomeRoute, navOptions)
+fun NavController.navigateToHome(navOptions: NavOptions? = null) = navigate(route = HomeRoute, navOptions)
 
-fun NavGraphBuilder.homeScreen(
-) {
+fun NavGraphBuilder.homeScreen() {
     navigation<HomeBaseRoute>(startDestination = HomeRoute) {
         composable<HomeRoute> {
             HomeScreen()
