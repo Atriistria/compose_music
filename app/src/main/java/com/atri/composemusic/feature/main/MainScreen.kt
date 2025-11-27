@@ -2,6 +2,7 @@ package com.atri.composemusic.feature.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,7 +46,15 @@ fun MainScreen(
     val intervalNavController = rememberNavController()
     val navBackStackEntry by intervalNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val layoutType = NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowAdaptiveInfo)
+
+    val layoutType = with(windowAdaptiveInfo) {
+        if (windowSizeClass.isWidthAtLeastBreakpoint(840)) {
+            NavigationSuiteType.NavigationDrawer
+        } else {
+            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowAdaptiveInfo)
+        }
+    }
+
     val navOption by remember(intervalNavController) {
         derivedStateOf {
             navOptions {
@@ -115,12 +124,20 @@ fun MainScreen(
 
         val playerModifier = Modifier.align(Alignment.BottomCenter)
             .then(
-                if (layoutType == NavigationSuiteType.NavigationRail) {
-                    Modifier.padding(start = 80.dp)
-                } else {
-                    Modifier
+                when (layoutType) {
+                    // 1. 如果是窄边栏 (Rail)，偏移 80dp
+                    NavigationSuiteType.NavigationRail -> Modifier.padding(start = 80.dp)
+
+                    // 2. 【新增】如果是宽侧边栏 (Drawer)，偏移 360dp (这是 M3 标准宽度)
+                    NavigationSuiteType.NavigationDrawer -> Modifier.padding(start = 360.dp)
+
+                    // 3. 底部导航栏 (BottomBar) 或其他情况，不需要侧边 padding
+                    else -> Modifier
                 }
             )
+            // 建议加上 fillMaxWidth，这样播放条在右侧区域是撑满的，而不是只有中间一小块
+            .fillMaxWidth()
+
         Box(modifier = playerModifier) {
             MiniPlayerOverlay {
                 appState.navigateToMusicPlayer()

@@ -1,5 +1,7 @@
 package com.atri.composemusic.core.data.di
 
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import com.atri.composemusic.core.data.repository.LoginRepository
 import com.atri.composemusic.core.data.repository.LoginRepositoryImpl
 import com.atri.composemusic.core.data.repository.MusicPlayRepository
@@ -25,6 +27,7 @@ abstract class DataModule {
         loginRepositoryImpl: LoginRepositoryImpl
     ): LoginRepository
 
+    @OptIn(UnstableApi::class)
     @Binds
     @Singleton
     abstract fun bindPlayerRepository(

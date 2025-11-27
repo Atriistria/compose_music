@@ -8,6 +8,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -69,7 +71,6 @@ fun MiniPlayerOverlay(navigateTo: () -> Unit) {
                 onLongClick = { isExpanded = !isExpanded },
             )
     ) {
-
         Box(modifier = Modifier.fillMaxSize()) {
             // 专辑封面
             Image(
@@ -77,10 +78,11 @@ fun MiniPlayerOverlay(navigateTo: () -> Unit) {
                 contentDescription = "Album Art",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp)
                     .size(imageSize)
                     .clip(RoundedCornerShape(12.dp))
                     .align(Alignment.TopStart)
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
             )
             ExpandedContent(modifier = Modifier.align(Alignment.BottomStart),isExpanded = isExpanded)
         }

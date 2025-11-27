@@ -28,7 +28,6 @@ import com.atri.composemusic.R
 fun ProfileScreen(
     navigate: () -> Unit
 ) {
-    //val navigate = { navigationViewModel.navigateTo(Screen.MyFavor.route) }
     ProfileScreen(navigate, "")
 }
 
