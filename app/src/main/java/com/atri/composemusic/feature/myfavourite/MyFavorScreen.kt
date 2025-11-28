@@ -52,7 +52,6 @@ fun MyFavouriteScreen(
 ) {
     val pagerState = rememberPagerState(initialPage = 0) {
         3
-
     }
     val tabs = listOf("歌曲", "专辑", "歌单")
     val coroutineScope = rememberCoroutineScope()

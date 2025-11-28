@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -43,6 +44,7 @@ private fun ProfileScreen(
     ) {
 
         Avatar(navigate)
+        ProfileItem()
     }
 }
 
@@ -74,7 +76,7 @@ fun Avatar(
                         .size(45.dp)
                         .clip(RoundedCornerShape(8.dp))
                 )
-                Column() {
+                Column {
                     Text(
                         text = " 张三",
                         style = MaterialTheme.typography.titleMedium,
@@ -92,6 +94,30 @@ fun Avatar(
             }
 
         }
+    }
+}
+
+@Composable
+fun ProfileItem() {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)) {
+        Column {
+            AsyncImage(
+                model = R.drawable.ic_like,
+                contentDescription = "这是个头像",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Text(modifier = Modifier.align(Alignment.CenterHorizontally), text = "收藏")
+        }
+
+        Column {
+
+        }
+
     }
 }
 
