@@ -30,7 +30,7 @@ import com.atri.composemusic.R
 import com.atri.composemusic.core.common.LanguageUtils
 
 @Composable
-fun SettingScreen() {
+fun SettingsScreen() {
     val list = listOf(
         SettingItem(1, "账号安全", "修改密码、绑定手机") { println("点击了账号安全") },
         SettingItem(2, "通知设置", "消息推送与静音设置") { println("点击了通知设置") },
@@ -94,7 +94,7 @@ fun SettingRow(item: SettingItem) {
 @Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun SettingScreenPreview() {
-    SettingScreen()
+    SettingsScreen()
 }
 
 data class SettingItem(

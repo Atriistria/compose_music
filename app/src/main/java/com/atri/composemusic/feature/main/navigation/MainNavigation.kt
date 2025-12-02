@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToMainScreen(navOptions: NavOptions? = null) = navigate(MainRoute, navOptions)
 
 fun NavGraphBuilder.mainScreen(
-    appState: CmAppState, // <--- 新增参数：需要传进去给 MainScreen
-    windowAdaptiveInfo: WindowAdaptiveInfo // <--- 新增参数
+    appState: CmAppState,
+    windowAdaptiveInfo: WindowAdaptiveInfo
 ) {
     composable<MainRoute> {
         MainScreen(appState, windowAdaptiveInfo)
