@@ -60,7 +60,6 @@ object NetworkModule {
     @Provides
     @Singleton
     fun imageLoader(
-        // 使用 Lazy 是为了打破潜在的循环依赖，或者在不需要时延迟初始化
         okHttpCallFactory: dagger.Lazy<Call.Factory>,
         @ApplicationContext application: Context,
     ): ImageLoader {
