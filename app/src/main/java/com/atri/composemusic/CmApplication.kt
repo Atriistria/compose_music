@@ -11,7 +11,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MApplication: Application(), ImageLoaderFactory {
+class CmApplication: Application(), ImageLoaderFactory {
 
     @Inject
     lateinit var imageLoader: dagger.Lazy<ImageLoader>

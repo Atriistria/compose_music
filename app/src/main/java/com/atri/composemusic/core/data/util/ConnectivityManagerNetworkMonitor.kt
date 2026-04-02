@@ -6,8 +6,8 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.core.content.getSystemService
-import com.atri.composemusic.core.common.Dispatcher
 import com.atri.composemusic.core.common.CmDispatcher.IO
+import com.atri.composemusic.core.common.Dispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class ConnectivityManagerNetworkMonitor @Inject constructor(
-    @ApplicationContext private val context: Context,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
+    @param:ApplicationContext private val context: Context,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : NetworkMonitor {
     override fun isOnline(): Flow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()

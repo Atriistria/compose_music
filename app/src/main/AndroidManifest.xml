@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".MApplication"
+        android:name=".CmApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
